@@ -1,35 +1,39 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof (Blowfish))]
 public class PlayerControl : MonoBehaviour
 {
     [SerializeField]
     private float movementSpeed;
 
-    private Rigidbody2D rigidBody;
+    private Blowfish blowfish;
 
-    public Vector2 movement;
-    public bool attack;
+    private Vector2 movement;
+    private bool attack;
 
     // Use this for initialization
     void Start()
     {
-        rigidBody = GetComponent<Rigidbody2D>();
+        blowfish = GetComponent<Blowfish>();
     }
 
     void FixedUpdate()
     {
-        rigidBody.velocity = movement * movementSpeed;
+        blowfish.Move(movement);
+        blowfish.Attack(attack);
+        attack = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        attack = false;
+        movement.x = Input.GetAxis("Horizontal") * movementSpeed;
+        movement.y = Input.GetAxis("Vertical") * movementSpeed;
 
-        movement.x = Input.GetAxis("Horizontal");
-        movement.y = Input.GetAxis("Vertical");
-
-        attack = Input.GetButtonDown("C");
+        if (!attack)
+        {
+            attack = Input.GetKeyDown(KeyCode.C);
+        }
     }
 }
